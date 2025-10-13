@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.*;
 import java.net.URI;
 import java.util.List;
 
-
 @RestController
 @RequestMapping("/api/test")
 @AllArgsConstructor
@@ -18,69 +17,43 @@ public class TestController {
 
     private final TestPostService testPostService;
 
-
     @GetMapping("/post")
-    public List<TestPostListDTO> getTestPostList() {
-        return testPostService.testPostListDto();
+    public ResponseEntity<ApiResponse<List<TestPostListDTO>>> getTestPostList() {
+        List<TestPostListDTO> list = testPostService.testPostListDto();
+        return ResponseEntity.ok(ApiResponse.ok(list, "성공"));
     }
-
 
     @GetMapping("/search")
-    public String test(@RequestParam String keyword) {
-        System.out.println("검색 키워드는 : " + keyword + " 입니다");
-        return keyword;
+    public ResponseEntity<ApiResponse<String>> test(@RequestParam String keyword) {
+        return ResponseEntity.ok(ApiResponse.ok(keyword, "성공"));
     }
 
-    //글 삭제
     @DeleteMapping("/post/{id}")
-    public ResponseEntity<Void> deletePostTest(@PathVariable int id){
-        try{
-            testPostService.deleteTestPost(id);
-            return ResponseEntity.noContent().build();
-        }catch (Exception e){
-            return ResponseEntity.internalServerError().build();
-        }
+    public ResponseEntity<ApiResponse<Void>> deletePostTest(@PathVariable int id) {
+        testPostService.deleteTestPost(id);
+        return ResponseEntity.ok(ApiResponse.ok("삭제 성공"));
     }
 
-    //글 수정 -> Patch
-    // Put ->
     @PatchMapping("/post/{id}")
-    public ResponseEntity<Void> patachPostTest(
+    public ResponseEntity<ApiResponse<Void>> patachPostTest(
             @PathVariable int id,
             @RequestBody PatachTestPostDTO dto
-    ){
-        try{
-            testPostService.patachTestPost(id, dto);
-            return ResponseEntity.ok().build();
-        } catch (Exception e) {
-            return ResponseEntity.internalServerError().build();
-        }
+    ) {
+        testPostService.patachTestPost(id, dto);
+        return ResponseEntity.ok(ApiResponse.ok("수정 성공"));
     }
 
-
     @GetMapping("/post/{id}")
-    public ResponseEntity<TestPostDetailDTO> pvTest(@PathVariable int id){
-        try{
-            return ResponseEntity.ok(
-                    testPostService.getTestPostDetail(id)
-            );
-        } catch (IllegalArgumentException e){
-            return ResponseEntity.notFound().build();
-        }catch (Exception e){
-            return ResponseEntity.internalServerError().build();
-        }
+    public ResponseEntity<ApiResponse<TestPostDetailDTO>> pvTest(@PathVariable int id) {
+        TestPostDetailDTO detail = testPostService.getTestPostDetail(id);
+        return ResponseEntity.ok(ApiResponse.ok(detail, "성공"));
     }
 
     @PostMapping("/post")
-    public ResponseEntity<Void> postTest(@Valid @RequestBody CreateTestPost dto){
-        try{
-            int createdId = testPostService.saveTestPost(dto);
-
-            testPostService.saveTestPost(dto);
-            URI location = URI.create("/post/" + createdId);
-            return ResponseEntity.created(location).build();
-        } catch (Exception e){
-            return ResponseEntity.internalServerError().build();
-        }
+    public ResponseEntity<ApiResponse<Integer>> postTest(@Valid @RequestBody CreateTestPost dto) {
+        int createdId = testPostService.saveTestPost(dto);
+        URI location = URI.create("/api/test/post/" + createdId);
+        return ResponseEntity.created(location)
+                .body(ApiResponse.ok(createdId, "생성 성공"));
     }
 }
