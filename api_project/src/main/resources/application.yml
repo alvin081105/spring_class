@@ -18,3 +18,7 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQL8Dialect
+
+
+  jwt:
+    secret: "THIS_IS_AT_LEAST_32_BYTES_SECRET_KEY_EXAMPLE_1234"
