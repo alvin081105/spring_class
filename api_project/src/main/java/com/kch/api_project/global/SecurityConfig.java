@@ -13,9 +13,17 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-@Configuration // 스프링이 관리하라고 설정
+@Configuration
 @EnableWebSecurity
 public class SecurityConfig {
+    /*swagger 코드는 어차피 build.gradle에 추가안했으면 있어도 작동안하니 그냥 놔둬도 작동양호*/
+    /* ==================== Swagger 허용 경로 (문서/리소스) ==================== */
+    private static final String[] SWAGGER_WHITELIST = {
+            "/v3/api-docs/**",
+            "/swagger-ui/**",
+            "/swagger-ui.html"
+    };
+    /* ====================================================================== */
 
     private final TokenProvider tokenProvider;
     private final CustomUserDetailService customUserDetailService;
@@ -25,7 +33,7 @@ public class SecurityConfig {
         this.customUserDetailService = customUserDetailService;
     }
 
-    @Bean // 비밀번호 암호화 Bean 등록
+    @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
@@ -40,15 +48,28 @@ public class SecurityConfig {
         return configuration.getAuthenticationManager();
     }
 
-    @Bean
+    @Bean // 시큐리티 필터 체인
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(AbstractHttpConfigurer::disable) // Spring Security 6.1 이상에서 권장되는 방식
+                // CSRF 비활성화 (JWT 사용 시 일반적으로 비활성화)
+                .csrf(AbstractHttpConfigurer::disable)
+
+                // 세션을 사용하지 않는 Stateless 전략
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+
+                // 인가(접근 제어) 설정
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/auth/**").permitAll() // 인증 없이 접근 가능한 경로
-                        .anyRequest().authenticated() // 나머지는 인증 필요
+                        /* ==================== Swagger 구간 시작 ==================== */
+                        .requestMatchers(SWAGGER_WHITELIST).permitAll()
+                        /* ==================== Swagger 구간 끝 ====================== */
+
+                        // 인증/회원가입 등 공개 API 경로
+                        .requestMatchers("/api/auth/**").permitAll()
+
+                        // 이외 모든 요청은 인증 필요
+                        .anyRequest().authenticated()
                 )
+
                 .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
