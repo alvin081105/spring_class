@@ -1,9 +1,6 @@
 package com.kch.api_project.controller;
 
-import com.kch.api_project.dto.LoginRequestDTO;
-import com.kch.api_project.dto.LoginResponseDTO;
-import com.kch.api_project.dto.RegisterRequestDTO;
-import com.kch.api_project.dto.ApiResponse;
+import com.kch.api_project.dto.*;
 import com.kch.api_project.service.AuthService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -37,5 +34,11 @@ public class AuthController {
     ) {
         LoginResponseDTO result = authService.login(loginRequestDTO);
         return ResponseEntity.ok(ApiResponse.ok(result, "로그인 성공"));
+    }
+
+    @PostMapping("/refresh")
+    public ResponseEntity<ApiResponse<RefreshResponseDTO>> refresh(@RequestBody RefreshRequestDTO req) {
+        RefreshResponseDTO response = authService.refreshAccessToken(req);
+        return ResponseEntity.ok(ApiResponse.ok(response, "Access Token이 재발급되었습니다."));
     }
 }

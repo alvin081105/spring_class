@@ -68,4 +68,10 @@ public class TokenProvider {
             return false;
         }
     }
+
+    // AccessToken 생성
+    public String createAccessToken(String username) {
+        return createToken(username);
+    }
+
 }

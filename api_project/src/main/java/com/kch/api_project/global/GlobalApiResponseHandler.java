@@ -2,6 +2,8 @@ package com.kch.api_project.global;
 
 import com.kch.api_project.dto.ApiResponse;
 import com.kch.api_project.dto.ValidationErrorDTO;
+import com.kch.api_project.excepstions.RefreshTokenExpiredException;
+import com.kch.api_project.excepstions.TokenNotValidatedException;
 import com.kch.api_project.excepstions.UserAlreadyExistException;
 
 import org.springframework.http.HttpStatus;
@@ -76,6 +78,21 @@ public class GlobalApiResponseHandler {
         System.out.println(e.getMessage());
         return ResponseEntity
                 .internalServerError()
+                .body(ApiResponse.fail(e.getMessage()));
+    }
+
+    @ExceptionHandler(RefreshTokenExpiredException.class)
+    public ResponseEntity<ApiResponse<Void>> handleRefreshTokenExpiredException(RefreshTokenExpiredException e){
+        return ResponseEntity
+                .status(401)
+                .body(ApiResponse.fail(e.getMessage()));
+    }
+
+
+    @ExceptionHandler(TokenNotValidatedException.class)
+    public ResponseEntity<ApiResponse<Void>> handleTokenValidatedException(TokenNotValidatedException e){
+        return ResponseEntity
+                .status(401)
                 .body(ApiResponse.fail(e.getMessage()));
     }
 }

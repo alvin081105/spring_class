@@ -8,18 +8,18 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "refresh_token")
 @Getter
-@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 public class RefreshToken {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String refreshToken;
 
-    @Column(nullable = false, name = "expiry_date_time")
-    private LocalDateTime expiry_date_time;
+    @Column(nullable = false)
+    private LocalDateTime expiryDateTime;
 }
