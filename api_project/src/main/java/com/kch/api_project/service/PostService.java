@@ -2,21 +2,20 @@ package com.kch.api_project.service;
 
 import com.kch.api_project.dto.CreateTestPost;
 import com.kch.api_project.dto.PatachTestPostDTO;
-import com.kch.api_project.dto.TestPostDetailDTO;
-import com.kch.api_project.dto.TestPostListDTO;
+import com.kch.api_project.dto.PostDetailDTO;
+import com.kch.api_project.dto.PostListDTO;
 import com.kch.api_project.entity.TestPost;
 import com.kch.api_project.repository.TestPostRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 @AllArgsConstructor
-public class TestPostService {
+public class PostService {
     private final TestPostRepository testPostRepository;
 
 
@@ -35,7 +34,7 @@ public class TestPostService {
         return createdTest.getId();
     }
 
-    public TestPostDetailDTO getTestPostDetail(int id) {
+    public PostDetailDTO getTestPostDetail(int id) {
         Optional<TestPost> otp = testPostRepository.findById((long) id);
         if(otp.isEmpty()) {
             throw new IllegalArgumentException();
@@ -43,7 +42,7 @@ public class TestPostService {
 
         TestPost tp = otp.get();
 
-        TestPostDetailDTO result = TestPostDetailDTO.builder()
+        PostDetailDTO result = PostDetailDTO.builder()
                 .title(tp.getTitle())
                 .body(tp.getBody())
                 .created_at(tp.getCreated_at())
@@ -53,13 +52,13 @@ public class TestPostService {
         return result;
     }
 
-    public List<TestPostListDTO> testPostListDto() {
+    public List<PostListDTO> testPostListDto() {
         List<TestPost> tpList =  testPostRepository.findAll();
 
-        List<TestPostListDTO> result = new ArrayList<>();
+        List<PostListDTO> result = new ArrayList<>();
         for (TestPost tp : tpList) {
             result.add(
-                    TestPostListDTO.builder()
+                    PostListDTO.builder()
                             .title(tp.getTitle())
                             .id(tp.getId())
                             .created_at(tp.getCreated_at())

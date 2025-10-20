@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @Setter
 @AllArgsConstructor
 @Builder
-public class TestPostDetailDTO {
+public class PostDetailDTO {
     private String title;
     private String body;
     private LocalDateTime created_at;

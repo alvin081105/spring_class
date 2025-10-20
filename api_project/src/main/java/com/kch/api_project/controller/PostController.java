@@ -1,7 +1,7 @@
 package com.kch.api_project.controller;
 
 import com.kch.api_project.dto.*;
-import com.kch.api_project.service.TestPostService;
+import com.kch.api_project.service.PostService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -18,14 +18,14 @@ import java.util.List;
 @AllArgsConstructor
 @Tag(name = "TestPosts", description = "테스트 게시글 API")
 @SecurityRequirement(name = "BearerAuth")
-public class TestController {
+public class PostController {
 
-    private final TestPostService testPostService;
+    private final PostService postService;
 
     @Operation(summary = "게시글 목록", description = "테스트 게시글 목록을 조회합니다.")
     @GetMapping("/post")
-    public ResponseEntity<ApiResponse<List<TestPostListDTO>>> getTestPostList() {
-        List<TestPostListDTO> list = testPostService.testPostListDto();
+    public ResponseEntity<ApiResponse<List<PostListDTO>>> getTestPostList() {
+        List<PostListDTO> list = postService.testPostListDto();
         return ResponseEntity.ok(ApiResponse.ok(list, "성공"));
     }
 
@@ -38,7 +38,7 @@ public class TestController {
     @Operation(summary = "게시글 삭제", description = "ID로 테스트 게시글을 삭제합니다.")
     @DeleteMapping("/post/{id}")
     public ResponseEntity<ApiResponse<Void>> deletePostTest(@PathVariable int id) {
-        testPostService.deleteTestPost(id);
+        postService.deleteTestPost(id);
         return ResponseEntity.ok(ApiResponse.ok("삭제 성공"));
     }
 
@@ -48,21 +48,21 @@ public class TestController {
             @PathVariable int id,
             @RequestBody PatachTestPostDTO dto
     ) {
-        testPostService.patachTestPost(id, dto);
+        postService.patachTestPost(id, dto);
         return ResponseEntity.ok(ApiResponse.ok("수정 성공"));
     }
 
     @Operation(summary = "게시글 단건 조회", description = "ID로 테스트 게시글 상세를 조회합니다.")
     @GetMapping("/post/{id}")
-    public ResponseEntity<ApiResponse<TestPostDetailDTO>> pvTest(@PathVariable int id) {
-        TestPostDetailDTO detail = testPostService.getTestPostDetail(id);
+    public ResponseEntity<ApiResponse<PostDetailDTO>> pvTest(@PathVariable int id) {
+        PostDetailDTO detail = postService.getTestPostDetail(id);
         return ResponseEntity.ok(ApiResponse.ok(detail, "성공"));
     }
 
     @Operation(summary = "게시글 생성", description = "테스트 게시글을 생성하고 Location 헤더에 경로를 포함합니다.")
     @PostMapping("/post")
     public ResponseEntity<ApiResponse<Integer>> postTest(@Valid @RequestBody CreateTestPost dto) {
-        int createdId = testPostService.saveTestPost(dto);
+        int createdId = postService.saveTestPost(dto);
         URI location = URI.create("/api/test/post/" + createdId);
         return ResponseEntity.created(location)
                 .body(ApiResponse.ok(createdId, "생성 성공"));

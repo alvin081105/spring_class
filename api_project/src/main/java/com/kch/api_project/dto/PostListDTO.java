@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 @Getter @Setter
 @AllArgsConstructor
 @Builder
-public class TestPostListDTO {
+public class PostListDTO {
     private int id;
     private String title;
     private LocalDateTime created_at;
