@@ -25,7 +25,7 @@ public class PostController {
     @Operation(summary = "게시글 목록", description = "테스트 게시글 목록을 조회합니다.")
     @GetMapping("/post")
     public ResponseEntity<ApiResponse<List<PostListDTO>>> getTestPostList() {
-        List<PostListDTO> list = postService.testPostListDto();
+        List<PostListDTO> list = postService.PostListDto();
         return ResponseEntity.ok(ApiResponse.ok(list, "성공"));
     }
 
@@ -55,14 +55,14 @@ public class PostController {
     @Operation(summary = "게시글 단건 조회", description = "ID로 테스트 게시글 상세를 조회합니다.")
     @GetMapping("/post/{id}")
     public ResponseEntity<ApiResponse<PostDetailDTO>> pvTest(@PathVariable int id) {
-        PostDetailDTO detail = postService.getTestPostDetail(id);
+        PostDetailDTO detail = postService.getPostDetail(id);
         return ResponseEntity.ok(ApiResponse.ok(detail, "성공"));
     }
 
     @Operation(summary = "게시글 생성", description = "테스트 게시글을 생성하고 Location 헤더에 경로를 포함합니다.")
     @PostMapping("/post")
     public ResponseEntity<ApiResponse<Integer>> postTest(@Valid @RequestBody CreateTestPost dto) {
-        int createdId = postService.saveTestPost(dto);
+        int createdId = postService.savePost(dto);
         URI location = URI.create("/api/test/post/" + createdId);
         return ResponseEntity.created(location)
                 .body(ApiResponse.ok(createdId, "생성 성공"));

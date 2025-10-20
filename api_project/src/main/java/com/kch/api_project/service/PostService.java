@@ -16,11 +16,11 @@ import java.util.Optional;
 @Service
 @AllArgsConstructor
 public class PostService {
-    private final PostRepository testPostRepository;
+    private final PostRepository postRepository;
 
 
     public int savePost(CreateTestPost dto) {
-        Post Post = Post.builder()
+        Post post = Post.builder()
                 .body(dto.getBody())
                 .title(dto.getTitle())
                 .build();
@@ -29,13 +29,13 @@ public class PostService {
         // 1. save가 무언가를 반환활것이다.
         // 2. save가 무언가를 반환하지 않으면, ㅈㄴ 귀찮지만 find로 다시 찾자
 
-        Post createdTest = PostRepository.save(Post);
+        Post createdTest = postRepository.save(Post);
 
         return createdTest.getId();
     }
 
     public PostDetailDTO getPostDetail(int id) {
-        Optional<Post> otp = PostRepository.findById((long) id);
+        Optional<Post> otp = postRepository.findById((long) id);
         if(otp.isEmpty()) {
             throw new IllegalArgumentException();
         }
@@ -53,7 +53,7 @@ public class PostService {
     }
 
     public List<PostListDTO> PostListDto() {
-        List<Post> tpList =  PostRepository.findAll();
+        List<Post> tpList =  postRepository.findAll();
 
         List<PostListDTO> result = new ArrayList<>();
         for (Post tp : tpList) {
@@ -71,12 +71,12 @@ public class PostService {
 
 
     public void deleteTestPost(long id){
-        PostRepository.deleteById(id);
+        postRepository.deleteById(id);
     }
 
     public void patachTestPost(int id, PatachTestPostDTO dto){
         //수정
-        Optional<Post> otp = PostRepository.findById((long) id);
+        Optional<Post> otp = postRepository.findById((long) id);
         if(otp.isEmpty()) {
             throw new IllegalArgumentException();
         }
@@ -92,7 +92,7 @@ public class PostService {
         }
 
 
-        testPostRepository.save(tp);
+        postRepository.save(tp);
     }
 
 
