@@ -29,7 +29,7 @@ public class PostService {
         // 1. save가 무언가를 반환활것이다.
         // 2. save가 무언가를 반환하지 않으면, ㅈㄴ 귀찮지만 find로 다시 찾자
 
-        Post createdTest = postRepository.save(Post);
+        Post createdTest = postRepository.save(post);
 
         return createdTest.getId();
     }
