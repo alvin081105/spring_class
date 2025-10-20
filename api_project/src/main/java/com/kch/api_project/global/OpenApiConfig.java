@@ -1,8 +1,8 @@
 package com.kch.api_project.global;
 
+import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
-import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.security.SecurityRequirement;
 import io.swagger.v3.oas.models.security.SecurityScheme;
 import org.springframework.context.annotation.Bean;
@@ -13,18 +13,17 @@ public class OpenApiConfig {
 
     @Bean
     public OpenAPI openAPI() {
-        String scheme = "BearerAuth";
+        String schemeName = "BearerAuth"; // 컨트롤러 @SecurityRequirement 와 동일해야 함
+
         return new OpenAPI()
                 .info(new Info()
                         .title("API Project")
-                        .version("v1")
-                        .description("API 문서"))
-                .components(new Components().addSecuritySchemes(
-                        scheme,
-                        new SecurityScheme()
+                        .version("v1"))
+                .components(new Components()
+                        .addSecuritySchemes(schemeName, new SecurityScheme()
                                 .type(SecurityScheme.Type.HTTP)
                                 .scheme("bearer")
                                 .bearerFormat("JWT")))
-                .addSecurityItem(new SecurityRequirement().addList(scheme));
+                .addSecurityItem(new SecurityRequirement().addList(schemeName));
     }
 }

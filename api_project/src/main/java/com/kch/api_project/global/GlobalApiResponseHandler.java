@@ -3,6 +3,7 @@ package com.kch.api_project.global;
 import com.kch.api_project.dto.ApiResponse;
 import com.kch.api_project.dto.ValidationErrorDTO;
 import com.kch.api_project.excepstions.RefreshTokenExpiredException;
+import com.kch.api_project.excepstions.ResourceNotFoundException;
 import com.kch.api_project.excepstions.TokenNotValidatedException;
 import com.kch.api_project.excepstions.UserAlreadyExistException;
 
@@ -95,4 +96,12 @@ public class GlobalApiResponseHandler {
                 .status(401)
                 .body(ApiResponse.fail(e.getMessage()));
     }
+
+   @ExceptionHandler(ResourceNotFoundException.class)
+   public ResponseEntity<ApiResponse<Void>>  handleResourceNotFoundException(ResourceNotFoundException e){
+        return ResponseEntity
+                .status(404)
+                .body(ApiResponse.fail(e.getMessage()));
+   }
+
 }
