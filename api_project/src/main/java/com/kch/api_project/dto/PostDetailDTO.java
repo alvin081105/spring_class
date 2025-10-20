@@ -14,7 +14,8 @@ import java.time.LocalDateTime;
 public class PostDetailDTO {
     private String title;
     private String body;
-    private String Users;
+    private String users;
     private LocalDateTime created_at;
     private LocalDateTime updated_at;
+    private int viewCount;
 }

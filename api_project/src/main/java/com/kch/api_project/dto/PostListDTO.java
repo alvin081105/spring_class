@@ -7,7 +7,8 @@ import lombok.Setter;
 
 import java.time.LocalDateTime;
 
-@Getter @Setter
+@Getter
+@Setter
 @AllArgsConstructor
 @Builder
 public class PostListDTO {
@@ -16,6 +17,5 @@ public class PostListDTO {
     private String username;
     private LocalDateTime created_at;
     private LocalDateTime updated_at;
-
-
+    private int viewCount;
 }

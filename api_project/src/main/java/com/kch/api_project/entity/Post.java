@@ -32,6 +32,9 @@ public class Post {
     @JoinColumn(name = "user_id")
     private Users user;
 
+    @Column(nullable = false)
+    private int viewCount = 0;
+
     @CreatedDate
     @Column(name = "created_at")
     private LocalDateTime created_at;
