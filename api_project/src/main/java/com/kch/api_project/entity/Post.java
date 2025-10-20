@@ -28,6 +28,10 @@ public class Post {
     @Column(nullable = false)
     private String body;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private Users user;
+
     @CreatedDate
     @Column(name = "created_at")
     private LocalDateTime created_at;

@@ -5,9 +5,14 @@ import com.kch.api_project.dto.PatachTestPostDTO;
 import com.kch.api_project.dto.PostDetailDTO;
 import com.kch.api_project.dto.PostListDTO;
 import com.kch.api_project.entity.Post;
+import com.kch.api_project.entity.Users;
+import com.kch.api_project.excepstions.ResourceNotFoundException;
+import com.kch.api_project.global.SecurityConfig;
 import com.kch.api_project.repository.PostRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import com.kch.api_project.repository.AuthRepository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,12 +22,17 @@ import java.util.Optional;
 @AllArgsConstructor
 public class PostService {
     private final PostRepository postRepository;
+    private final AuthRepository userRepository;
 
 
     public int savePost(CreateTestPost dto) {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        Users author = userRepository.findByUsername(username)
+                .orElseThrow(() -> new ResourceNotFoundException("유저를 찾을 수 없습니다"));
         Post post = Post.builder()
                 .body(dto.getBody())
                 .title(dto.getTitle())
+                .user(author)
                 .build();
 
         // 가설 세우기
