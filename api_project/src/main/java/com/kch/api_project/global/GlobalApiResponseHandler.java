@@ -13,6 +13,8 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import io.swagger.v3.oas.annotations.Hidden;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +22,9 @@ import java.util.List;
 /**
   전역 예외 처리 + 응답 래핑
  */
-@RestControllerAdvice
+
+@Hidden
+@RestControllerAdvice // swagger 오류로 인한 주석 처리
 public class GlobalApiResponseHandler {
 
     /**
