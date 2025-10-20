@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 public class PostListDTO {
     private int id;
     private String title;
+    private String username;
     private LocalDateTime created_at;
     private LocalDateTime updated_at;
 

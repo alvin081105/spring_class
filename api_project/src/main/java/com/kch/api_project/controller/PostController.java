@@ -48,7 +48,7 @@ public class PostController {
             @PathVariable int id,
             @RequestBody PatachTestPostDTO dto
     ) {
-        postService.patachTestPost(id, dto);
+        postService.patachTestPost((long) id, dto);
         return ResponseEntity.ok(ApiResponse.ok("수정 성공"));
     }
 
