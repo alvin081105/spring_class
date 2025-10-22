@@ -7,6 +7,8 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,6 +23,17 @@ import java.util.List;
 public class PostController {
 
     private final PostService postService;
+
+    @Operation(summary = "게시글 전체조회(페이지네이션)", description = "페이지, 사이즈로 게시글을 페이징 조회합니다. 기본 정렬: created_at DESC")
+    @GetMapping
+    public ResponseEntity<ApiResponse<Page<PostListDTO>>> postlist(
+            Pageable pageable,
+            @RequestParam String sortType
+    ) {
+        Page<PostListDTO> result = postService.getPostList(pageable, sortType);
+        return ResponseEntity.ok(ApiResponse.ok(result, "성공"));
+    }
+
 
     @Operation(summary = "게시글 목록", description = "테스트 게시글 목록을 조회합니다.")
     @GetMapping("/post")
@@ -67,4 +80,13 @@ public class PostController {
         return ResponseEntity.created(location)
                 .body(ApiResponse.ok(createdId, "생성 성공"));
     }
+
+    @GetMapping("/my-posts")
+    public ResponseEntity<ApiResponse<Page<PostListDTO>>> getMyPosts(
+            Pageable pageable
+    ){
+        Page<PostListDTO> result = postService.getMyPostList(pageable);
+        return ResponseEntity.ok(ApiResponse.ok(result, "성공"));
+    }
+
 }

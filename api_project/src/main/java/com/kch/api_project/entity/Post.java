@@ -1,4 +1,5 @@
 package com.kch.api_project.entity;
+
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
@@ -15,7 +16,6 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Builder
 @EntityListeners(AuditingEntityListener.class)
-
 public class Post {
 
     @Id
@@ -32,6 +32,7 @@ public class Post {
     @JoinColumn(name = "user_id")
     private Users user;
 
+    @Builder.Default
     @Column(nullable = false)
     private int viewCount = 0;
 
@@ -42,6 +43,4 @@ public class Post {
     @LastModifiedBy
     @Column(name = "updated_at")
     private LocalDateTime updated_at;
-
-
 }

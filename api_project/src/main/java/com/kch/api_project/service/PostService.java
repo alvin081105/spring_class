@@ -11,9 +11,13 @@ import com.kch.api_project.repository.AuthRepository;
 import com.kch.api_project.repository.PostRepository;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
+import org.apache.catalina.User;
+import org.springframework.data.domain.Page;
 import org.springframework.context.ApplicationContextException;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.data.domain.Page;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +28,8 @@ public class PostService {
 
     private final PostRepository postRepository;
     private final AuthRepository userRepository;
+
+
 
     public int savePost(CreateTestPost dto) {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -130,4 +136,43 @@ public class PostService {
     public List<Post> getAllPosts() {
         return postRepository.findAll();
     }
+
+    public Page<PostListDTO> getPostList(Pageable pageable, String sortType) {
+
+        Page<Post> posts = Page.empty();
+        if(sortType.equals("RECENT")){
+            posts = postRepository.findByOrderByCreateDateTimeDesc(pageable);
+        } else if(sortType.equals("HITS")){
+            posts = postRepository.findByOrderByHitsDesc(pageable);
+        }else { // 정렬 옵션 값이 똑바로 내려오지 않은 상태
+            posts = postRepository.findByOrderByCreateDateTimeDesc(pageable);
+        }
+
+        return posts.map(post ->
+                PostListDTO.builder()
+                        .id(post.getId())
+                        .title(post.getTitle())
+                        .username(post.getUser().getUsername())
+                        .created_at(post.getCreated_at())
+                        .build()
+        );
+    }
+
+    public Page<PostListDTO> getMyPostList(Pageable pageable) {
+        String requestUserName = SecurityContextHolder.getContext().getAuthentication().getName();
+        Users user = userRepository.findByUsername(requestUserName)
+                .orElseThrow(() -> new ResourceNotFoundException("게시글을 찾을 수 없습니다."));
+
+        return postRepository.findAllByUserId(user.getId(), pageable).map(post ->
+                PostListDTO.builder()
+                        .title(post.getTitle())
+                        .id(post.getId())
+                        .username(post.getUser().getUsername())
+                        .created_at(post.getCreated_at())
+                        .updated_at(post.getUpdated_at())
+                        .build()
+        );
+    }
+
+
 }
