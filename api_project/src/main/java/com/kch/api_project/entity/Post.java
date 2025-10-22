@@ -36,6 +36,9 @@ public class Post {
     @Column(nullable = false)
     private int viewCount = 0;
 
+    @Column(nullable = false)
+    private boolean isDeleted;
+
     @CreatedDate
     @Column(name = "created_at")
     private LocalDateTime created_at;

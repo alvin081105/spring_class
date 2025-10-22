@@ -30,6 +30,9 @@ public class Users {
     @Column(nullable = false, unique = true, length = 15)
     private String nickname;
 
+    @Column(nullable = false)
+    private boolean isDeleted;
+
     @Column(nullable = false, unique = true, length = 200)
     private String email;
 

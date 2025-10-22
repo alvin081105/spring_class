@@ -54,6 +54,10 @@ public class PostService {
         Post post = postRepository.findById((long) id)
                 .orElseThrow(() -> new ResourceNotFoundException("게시글을 찾을 수 없습니다."));
 
+        if(post.isDeleted()){
+            throw new ResourceNotFoundException("삭제된 게시글입니다.");
+        }
+
         // 조회수 증가
         post.setViewCount(post.getViewCount() + 1);
         // @Transactional 이므로 flush 시점에 업데이트 반영
@@ -100,6 +104,9 @@ public class PostService {
             throw new ApplicationContextException("작성자만 게시글을 삭제할 수 있습니다.");
         }
 
+        post.setDeleted(true);
+        postRepository.save(post);
+
         postRepository.deleteById(id);
     }
 
@@ -108,6 +115,10 @@ public class PostService {
 
         Post post = postRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("게시글을 찾을 수 없습니다."));
+
+        if(post.isDeleted()){
+            throw new ResourceNotFoundException("삭제된 게시글입니다.");
+        }
 
         if (!post.getUser().getUsername().equals(requestUserName)) {
             throw new ApplicationContextException("작성자만 게시글을 수정할 수 있습니다.");
@@ -141,11 +152,11 @@ public class PostService {
 
         Page<Post> posts = Page.empty();
         if(sortType.equals("RECENT")){
-            posts = postRepository.findByOrderByCreateDateTimeDesc(pageable);
+            posts = postRepository.findByIsDeletedFalseOrderByCreateDateTimeDesc(pageable);
         } else if(sortType.equals("HITS")){
-            posts = postRepository.findByOrderByHitsDesc(pageable);
+            posts = postRepository.findByIsDeletedFalseOrderByHitsDesc(pageable);
         }else { // 정렬 옵션 값이 똑바로 내려오지 않은 상태
-            posts = postRepository.findByOrderByCreateDateTimeDesc(pageable);
+            posts = postRepository.findByIsDeletedFalseOrderByCreateDateTimeDesc(pageable);
         }
 
         return posts.map(post ->

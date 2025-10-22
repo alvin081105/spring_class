@@ -10,10 +10,10 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     Page<Post> findAll(Pageable pageable);
 
     @Query("SELECT p FROM Post p ORDER BY p.viewCount DESC")
-    Page<Post> findByOrderByHitsDesc(Pageable pageable);
+    Page<Post> findByIsDeletedFalseOrderByHitsDesc(Pageable pageable);
 
     @Query("SELECT p FROM Post p ORDER BY p.created_at DESC")
-    Page<Post> findByOrderByCreateDateTimeDesc(Pageable pageable);
+    Page<Post> findByIsDeletedFalseOrderByCreateDateTimeDesc(Pageable pageable);
 
     Page<Post> findAllByUserId(Integer userId, Pageable pageable);
 }
